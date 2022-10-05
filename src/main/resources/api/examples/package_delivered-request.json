@@ -1,0 +1,18 @@
+{
+    "email": "email@example.com",
+    "ctx": {
+        "Name": "Thiyada",
+        "PackageNo": "KNJ0300858996",
+        "OrderId": "CO2209030068490",
+        "ItemsCollection": [
+            {
+                "ProductUrl": "https://central.co.th/en/fila-black-fila-script-unisex-bucket-hat-mkp1156782",
+                "Image": "https://backend.central.co.th/pub/media//catalog/product//1/6/169c36b3b05f00a5e43d5a252a5f15c640551104_mkp1156782dummy.jpg",
+                "Name": "BLACK FILA Script Unisex Bucket Hat",
+                "Sku": "MKP1156782",
+                "Qty": 1,
+                "Price": "763.00"
+            }
+        ]
+    }
+}

@@ -1,0 +1,20 @@
+#%RAML 1.0 Trait
+description: Contains base request headers
+
+headers:
+  Accept:
+    description: "Media type of the request"
+    type: string
+    required: false
+  X-Correlation-ID: 
+    description: "Transaction ID. A unique identifier value that is attached to requests and messages that allow reference to a particular transaction or event chain."
+    required: true
+    type: string
+  client-id:
+    description: "Contains the unique id for the verification of this request"
+    required: true
+    type: string
+  client-secret:  
+    description: "Contains the password for the verification of this request"
+    required: true
+    type: string

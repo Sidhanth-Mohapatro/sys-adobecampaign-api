@@ -1,0 +1,13 @@
+{
+  "x-event-code": "404",
+  "x-event-message": "Resource Not Found",
+  "x-event-id": "5a01983b-2977-42d2-b21e-4189f640866c",
+  "timestamp": "2022-04-25 11:30:31",
+  "env": "dev",
+  "application": "api-name",
+  "error": {
+    "status-code": 404,
+    "type": "HTTP:NOT_FOUND",
+	  "description": "Error Description"
+  }
+}

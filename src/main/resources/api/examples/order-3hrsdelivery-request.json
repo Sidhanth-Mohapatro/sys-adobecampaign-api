@@ -1,0 +1,33 @@
+{
+    "email": "sidhanth@central.tech",
+    "ctx": {
+        "GrandTotal": "0.00",
+        "DiscountAmount": "5,400.00",
+        "CouponCode": "",
+        "ShippingAmount": "0.00",
+        "Subtotal": "5,400.00",
+        "OrderShippingDescription": "Grab - 3 Hour Delivery",
+        "PaymentHtml": "<dl class=\"payment-method\" style=\"margin-top: 0; margin-bottom: 10px;\">\n<dt class=\"title\" style=\"margin-bottom: 5px; margin-top: 0; font-weight: 400;\">T1 Full redeem</dt>\n</dl>",
+        "ShippingAddress": "วิภาวี วงศ์ดี\naddress: ทองหล่อ 23 สุขุมวิท 55\nzipCode: 10110\nคลองตันเหนือ\nวัฒนา\nกรุงเทพมหานคร, กรุงเทพมหานคร, 10110\nThailand\nT: 0808345677",
+        "BillingAddress": "",
+        "OrderCustomerNote": "",
+        "OrderCreatedAt": "Sep 7, 2022, 11:36:22 PM",
+        "OrderCustomerName": "วิภาวี วงศ์ดี",
+        "OrderIncrementId": "CO2208120346172_2",
+        "OrderItemsCollection": [
+            {
+                "ItemThumbnail": "https://backend.central.co.th/pub/media//catalog/product//c/d/cds82098797-6122.jpg",
+                "ItemUrl": "https://central.co.th/th/dior-dior-addict-lip-glow-natural-glow-custom-color-reviving-lip-balm-24h-hydration-grcds0922050093",
+                "Name": "Dior Addict Lip Glow Natural Glow Custom Color Reviving Lip Balm - 24h Hydration",
+                "Sku": "CDS82098797",
+                "Description": "",
+                "QtyOrdered": 1,
+                "RowTotal": "1,350.00",
+                "ParentItemId": "",
+                "GiftMessageSender": "",
+                "GiftMessageRecipient": "",
+                "GiftMessageMessage": ""
+            }
+        ]
+    }
+}

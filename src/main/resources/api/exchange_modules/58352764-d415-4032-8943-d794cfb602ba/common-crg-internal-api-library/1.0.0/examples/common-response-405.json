@@ -1,0 +1,13 @@
+{
+  "x-event-code": "405",
+  "x-event-message": "Method not allowed for this URI",
+  "x-event-id": "5a01983b-2977-42d2-b21e-4189f640866c",
+  "timestamp": "2022-04-25 11:30:31",
+  "env": "dev",
+  "application": "api-name",
+  "error": {
+    "status-code": 405,
+    "type": "HTTP:METHOD_NOT_ALLOWED",
+	  "description": "Error Description"
+  }
+}

@@ -1,0 +1,26 @@
+#%RAML 1.0 Library
+usage: Base response type for success and error payloads
+
+types:
+  base-response:
+    description: This response type is both usable for success and failure json responses.
+    properties:
+      x-event-code: string
+      x-event-message: string
+      x-event-id: string
+      timestamp: string
+      env: string
+      application: string
+      data?: any
+  
+  base-error-response:
+    description: This response type is both usable for success and failure json responses.
+    properties:
+      x-event-code: string
+      x-event-message: string
+      x-event-id: string
+      timestamp: string
+      env: string
+      application: string
+      error?:
+        type: !include type-common-error-response-object.raml

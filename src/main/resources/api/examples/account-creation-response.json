@@ -1,0 +1,38 @@
+{
+    "PKey": "@FPDr0m6Ep-Kk53B8oYEm2gxzTzpU0PZtTd53c5T94hmAa45g6hewJsAkZaOsz_qmbeYxawrz0zG40s-luXGXzg_-Y7uMd2Fj2ExUhFvz5N4Bp7y8",
+    "application": "",
+    "countryCode": "",
+    "created": "",
+    "ctx": {
+        "customer_email": "",
+        "customer_name": ""
+    },
+    "email": "",
+    "expiration": "",
+    "externalId": "",
+    "externalId2": "",
+    "externalId3": "",
+    "externalId4": "",
+    "externalId5": "",
+    "href": "https://mc.adobe.io/the1/campaign/mcthe1/EVTCDS_New_Account_En/@FPDr0m6Ep-Kk53B8oYEm2gxzTzpU0PZtTd53c5T94hmAa45g6hewJsAkZaOsz_qmbeYxawrz0zG40s-luXGXzg_-Y7uMd2Fj2ExUhFvz5N4Bp7y8",
+    "marketingCloudId": "",
+    "mobilePhone": "",
+    "postalAddress": {
+        "addrDefined": false,
+        "line1": "",
+        "line2": "",
+        "line3": "",
+        "line4": "",
+        "line5": "",
+        "line6": "",
+        "line7": "",
+        "serialized": ""
+    },
+    "processed": "",
+    "pushPlatform": "apns",
+    "registrationToken": "",
+    "scheduled": "",
+    "serverUrl": "https://the1-mkt-prod1-lb.campaign.adobe.com",
+    "status": "pending",
+    "title": ""
+}

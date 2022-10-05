@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+    <apikit:config name="sys-adobecampaign-api-config" api="sys-adobecampaign-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="sys-adobecampaign-api-main">
+        <http:listener path="${api.path.basepath}" config-ref="${api.listener.config}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="sys-adobecampaign-api-config" />
+		<error-handler ref="sys-adobecampaign-api-APIKIT_Error_Handler" />
+    </flow>
+    <flow name="sys-adobecampaign-api-console">
+      <http:listener path="${api.path.console}" config-ref="${api.listener.config}">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="sys-adobecampaign-api-config" />
+		<error-handler ref="sys-adobecampaign-api-APIKIT_Error_Handler" />
+    </flow>
+    <flow name="post:\passwords\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform doc:name="Set Event Name">
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="cc6d04db-fc43-4c0b-b716-8011b50798bb" name="Generate_Access_Token_SubFlow" />
+		<flow-ref doc:name="Invoke ACD Service" doc:id="f7d625c6-c68c-4e0f-bad3-910140962b57" name="acd-cds-Sub_Flow" />
+		<ee:transform doc:name="Final Response" doc:id="7d26b9be-4465-470c-800e-85f83d8316a9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+    </flow>
+    <flow name="post:\accounts\(event):application\json:sys-adobecampaign-api-config">
+        <logger level="INFO" doc:name="START - POST /accounts/{event_name} - Create New Account" doc:id="8e69edab-cc49-4ad8-900f-4a1c03c06c7f" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.entry'), &quot;&quot;, &quot; POST /accounts/{event_name} - Create New Account&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.request}" />
+		<ee:transform doc:name="Set uri Params">
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="dee2bf91-5eb3-45b1-98ae-71bad4a94d48" name="Generate_Access_Token_SubFlow"/>
+		<flow-ref doc:name="Invoke ACD Service" doc:id="e51a3477-2dc9-4cd8-9692-244f0022685b" name="acd-cds-Sub_Flow"/>
+		<ee:transform doc:name="Final Response" doc:id="945d28a1-916a-4a0e-8a41-0b62fa79a241" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="END - POST /accounts/{event_name} - Create New Account" doc:id="66945f3a-d1f8-437f-8279-f3d0979031c2" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.end'), &quot;&quot;, &quot;END - POST /accounts/{event_name} - Create New Account&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.response}" />
+    </flow>
+	<flow name="post:\orders\(event):application\json:sys-adobecampaign-api-config" doc:id="0289daeb-05ed-4918-a173-2274a04c657f" >
+		<logger level="INFO" doc:name="START - POST /orders/{event_name} - Create New Order" doc:id="b6d76360-6fbf-4c7e-966e-b939209cb7d5" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.entry'), &quot;&quot;, &quot; POST /orders/{event_name} - Create New Order&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.request}" />
+		<ee:transform doc:name="Set uri Params" doc:id="d95812bb-c166-45ba-ac3c-894524e28e7c" >
+			<ee:variables >
+				<ee:set-variable variableName="event" ><![CDATA[attributes.uriParams.'event']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="56caccc1-aeeb-4110-828a-9af763a0ee65" name="Generate_Access_Token_SubFlow" />
+		<flow-ref doc:name="Invoke ACD Service" doc:id="ffeb982e-68c9-4edf-a791-be122efc57f5" name="acd-cds-Sub_Flow" />
+		<ee:transform doc:name="Final Response" doc:id="7389a030-ea32-4331-ae73-77b86a4633f5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="END - POST /orders/{event_name} - Create New Order" doc:id="2c063ca8-3310-445f-9bec-da150bf7e556" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.end'), &quot;&quot;, &quot;END - POST /orders/{event_name} - Create New Order&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.response}" />
+	</flow>
+	<flow name="post:\vouchers\(event):application\json:sys-adobecampaign-api-config" doc:id="41cdd584-10e7-4557-a712-4370dc77a964" >
+		<logger level="INFO" doc:name="START - POST vouchers/{event_name} - Create Review Voucher" doc:id="1d638b68-efe0-482a-bb18-8e8999a45c1a" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.entry'), &quot;&quot;, &quot; POST /vouchers/{event_name} - Create Review Voucher&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.request}" />
+		<ee:transform doc:name="Set uri Params" doc:id="d2bcb538-10a0-47fe-93cb-96571b052e80" >
+			<ee:variables >
+				<ee:set-variable variableName="event" ><![CDATA[attributes.uriParams.'event']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="e92100c9-879e-4513-a54c-706425da6248" name="Generate_Access_Token_SubFlow" />
+		<flow-ref doc:name="Invoke ACD Service" doc:id="385213c2-2460-4839-8092-c647b2d04002" name="acd-cds-Sub_Flow" />
+		<ee:transform doc:name="Final Response" doc:id="326232e7-1607-42de-8a5d-7569094904bc" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="END - POST /vouchers/{event_name} - Create Review Voucher" doc:id="8e17a634-df27-4517-a739-8e3f6c6dad03" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.end'), &quot;&quot;, &quot;END - POST /vouchers/{event_name} - Create Review Vouchers&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.response}" />
+	</flow>
+	<flow name="post:\orders\payorders\(event):application\json:sys-adobecampaign-api-config">
+		<logger level="INFO" doc:name="START - POST orders/payorders/{event_name} - Payorders123" doc:id="2c14a58d-3dc3-4b11-bcf0-5690f3394532" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.entry'), &quot;&quot;, &quot; POST orders/payorders/{event_name} - Payorders123&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.request}" />
+		<ee:transform doc:name="Set uri Params" doc:id="2ed23bc6-b4ec-41fe-bf1b-6f847ebaa2ef" >
+			<ee:variables >
+				<ee:set-variable variableName="event" ><![CDATA[attributes.uriParams.'event']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="9bc1d466-c5b1-48b7-88aa-b0b140961213" name="Generate_Access_Token_SubFlow" />
+		<flow-ref doc:name="Invoke ACD Service" doc:id="6969b165-6590-4a4a-aab0-e3308a16ec6d" name="acd-cds-Sub_Flow" />
+		<ee:transform doc:name="Final Response" doc:id="162fec3d-877c-47a6-aec0-7fa47333c647" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="END - POST orders/payorders/{event_name} - Payorders123" doc:id="b1947c22-1a3a-424e-8b57-ecdde550cc88" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.end'), &quot;&quot;, &quot;END - POST orders/payorders/{event_name} - Payorders123&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.response}" />
+    </flow>
+    <flow name="post:\subscription\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  PKey: "@gy0a6uEdQNoJexxqah6EsisofPf7I2uDU9rySNuIh4pGbnY6gukqpVQiTZskwmNo5mL5xVHUsVkY5rxPlXnJNWWRFiREklaTkmjbdccI71dmUAwpYfg-Q5P7UPoaClqYg8nqSA",
+  application: "",
+  countryCode: "",
+  created: "",
+  ctx: {},
+  email: "",
+  expiration: "",
+  externalId: "",
+  externalId2: "",
+  externalId3: "",
+  externalId4: "",
+  externalId5: "",
+  href: "https://mc.adobe.io/the1-mkt-stage1/campaign/mcthe1/EVTRE_CDS_Subscription_Success/@gy0a6uEdQNoJexxqah6EsisofPf7I2uDU9rySNuIh4pGbnY6gukqpVQiTZskwmNo5mL5xVHUsVkY5rxPlXnJNWWRFiREklaTkmjbdccI71dmUAwpYfg-Q5P7UPoaClqYg8nqSA",
+  marketingCloudId: "",
+  mobilePhone: "",
+  postalAddress: {
+    addrDefined: false,
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: "",
+    line5: "",
+    line6: "",
+    line7: "",
+    serialized: ""
+  },
+  processed: "",
+  pushPlatform: "apns",
+  registrationToken: "",
+  scheduled: "",
+  serverUrl: "https://the1-mkt-stage1-lb.campaign.adobe.com",
+  status: "pending",
+  title: ""
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\clickandcollect\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  PKey: "@xrUr3D1L4uUOTsAzuowOw6xiJrBEokRfcI7tfL56BZHLkPGRudZ5oruaqMiHG37i89q6nj4ke1gJrLWnrRrVU157PEeDi1AgiaA8hPAinpA1N_SqJxUVS7KhCkBlyJe6RFa3WQ",
+  application: "",
+  countryCode: "",
+  created: "",
+  ctx: {
+    OrderCustomerName: "",
+    OrderIncrementId: "",
+    OrderPickupCode: "",
+    PickupLocationName: ""
+  },
+  email: "",
+  expiration: "",
+  externalId: "",
+  externalId2: "",
+  externalId3: "",
+  externalId4: "",
+  externalId5: "",
+  href: "https://mc.adobe.io/the1-mkt-stage1/campaign/mcthe1/EVTRE_CDS_Click_And_Collect_EN/@xrUr3D1L4uUOTsAzuowOw6xiJrBEokRfcI7tfL56BZHLkPGRudZ5oruaqMiHG37i89q6nj4ke1gJrLWnrRrVU157PEeDi1AgiaA8hPAinpA1N_SqJxUVS7KhCkBlyJe6RFa3WQ",
+  marketingCloudId: "",
+  mobilePhone: "",
+  postalAddress: {
+    addrDefined: false,
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: "",
+    line5: "",
+    line6: "",
+    line7: "",
+    serialized: ""
+  },
+  processed: "",
+  pushPlatform: "apns",
+  registrationToken: "",
+  scheduled: "",
+  serverUrl: "https://the1-mkt-stage1-lb.campaign.adobe.com",
+  status: "pending",
+  title: ""
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\package_shipped\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  PKey: "@ZphkQqgwPhjyt5gzk43Pe6rEoO_7HzQhZ1ph6E_ccjKJPm7d_7Pfq2gIX8mRXDYLye0ySh318yqT-f3mmSJgvI_yNjbdENrdyS4Oq8KxUadLbRHe",
+  application: "",
+  countryCode: "",
+  created: "",
+  ctx: {
+    CustomerAddress: "",
+    ItemsCollection: [],
+    Lastname: "",
+    Name: "",
+    OrderId: "",
+    OrderPackageNo: "",
+    Package: "",
+    PackageNo: "",
+    TrackingNo: "",
+    TrackingUrl: ""
+  },
+  email: "",
+  expiration: "",
+  externalId: "",
+  externalId2: "",
+  externalId3: "",
+  externalId4: "",
+  externalId5: "",
+  href: "https://mc.adobe.io/the1-mkt-stage1/campaign/mcthe1/EVTRE_CDS_Package_Shipped_EN/@ZphkQqgwPhjyt5gzk43Pe6rEoO_7HzQhZ1ph6E_ccjKJPm7d_7Pfq2gIX8mRXDYLye0ySh318yqT-f3mmSJgvI_yNjbdENrdyS4Oq8KxUadLbRHe",
+  marketingCloudId: "",
+  mobilePhone: "",
+  postalAddress: {
+    addrDefined: false,
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: "",
+    line5: "",
+    line6: "",
+    line7: "",
+    serialized: ""
+  },
+  processed: "",
+  pushPlatform: "apns",
+  registrationToken: "",
+  scheduled: "",
+  serverUrl: "https://the1-mkt-stage1-lb.campaign.adobe.com",
+  status: "pending",
+  title: ""
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\shipping\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  PKey: "@Lus8fGu0JvMBsJoFulYiTy1MrFmA6lafVO1fQcNQzGmfsniZRnD1PuK4_3jFZ83rpFnvlWQRlmqZM404221Opwk_J5YrMatZd4nzA9xgox3Grbx9",
+  application: "",
+  countryCode: "",
+  created: "",
+  ctx: {
+    CouponCode: "",
+    DiscountAmount: "",
+    GrandTotal: "",
+    OrderCreatedAt: "",
+    OrderCustomerName: "",
+    OrderEmailCustomerNote: "",
+    OrderIncrementId: "",
+    OrderItems: [],
+    ShippingAddress: "",
+    ShippingAmount: "",
+    Subtotal: "",
+    TrackingId: "",
+    TrackingLink: ""
+  },
+  email: "",
+  expiration: "",
+  externalId: "",
+  externalId2: "",
+  externalId3: "",
+  externalId4: "",
+  externalId5: "",
+  href: "https://mc.adobe.io/the1-mkt-stage1/campaign/mcthe1/EVTRE_CDS_Shipping_EN/@Lus8fGu0JvMBsJoFulYiTy1MrFmA6lafVO1fQcNQzGmfsniZRnD1PuK4_3jFZ83rpFnvlWQRlmqZM404221Opwk_J5YrMatZd4nzA9xgox3Grbx9",
+  marketingCloudId: "",
+  mobilePhone: "",
+  postalAddress: {
+    addrDefined: false,
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: "",
+    line5: "",
+    line6: "",
+    line7: "",
+    serialized: ""
+  },
+  processed: "",
+  pushPlatform: "apns",
+  registrationToken: "",
+  scheduled: "",
+  serverUrl: "https://the1-mkt-stage1-lb.campaign.adobe.com",
+  status: "pending",
+  title: ""
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\reminders\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  PKey: "@QjS969XJIzI30NtEE5WzfklY0HnA_PIEo-MLwnpK3TPYu-dN3t7AAM4eQvH34C-NvFZWOGUnp9_OQrykU9oXUN5gYZ9Am2B8KjtQ0MQxl8gEVGj0NkGqMlKqM8Yi9IhC173TYg",
+  application: "",
+  countryCode: "",
+  created: "",
+  ctx: {
+    OrderCustomerName: "",
+    OrderIncrementId: "",
+    OrderPickupCode: "",
+    PickupLocationAddress: "",
+    PickupLocationName: "",
+    PickupLocationTelephone: ""
+  },
+  email: "",
+  expiration: "",
+  externalId: "",
+  externalId2: "",
+  externalId3: "",
+  externalId4: "",
+  externalId5: "",
+  href: "https://mc.adobe.io/the1-mkt-stage1/campaign/mcthe1/EVTRE_CDS_REMINDER_2HRS_Pickup_EN/@QjS969XJIzI30NtEE5WzfklY0HnA_PIEo-MLwnpK3TPYu-dN3t7AAM4eQvH34C-NvFZWOGUnp9_OQrykU9oXUN5gYZ9Am2B8KjtQ0MQxl8gEVGj0NkGqMlKqM8Yi9IhC173TYg",
+  marketingCloudId: "",
+  mobilePhone: "",
+  postalAddress: {
+    addrDefined: false,
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: "",
+    line5: "",
+    line6: "",
+    line7: "",
+    serialized: ""
+  },
+  processed: "",
+  pushPlatform: "apns",
+  registrationToken: "",
+  scheduled: "",
+  serverUrl: "https://the1-mkt-stage1-lb.campaign.adobe.com",
+  status: "pending",
+  title: ""
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\orders\3hrsdelivery\(event):application\json:sys-adobecampaign-api-config">
+		<logger level="INFO" doc:name="START - POST orders/3hrsdelivery/{event_name} - orderdelivery" doc:id="70dc8360-4a49-44c8-8799-2a8d905c442f" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.entry'), &quot;&quot;, &quot;POST orders/3hrsdelivery/{event_name} - orderdelivery&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.request}" />
+		<ee:transform doc:name="Set uri Params" doc:id="642cae81-a1c6-4363-b0e4-f563fe9debf9" >
+			<ee:variables >
+				<ee:set-variable variableName="event" ><![CDATA[attributes.uriParams.'event']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="4cbd0f48-c2bc-4bcb-b05c-ef2da5fb968e" name="Generate_Access_Token_SubFlow" />
+		<flow-ref doc:name="Invoke ACD Service" doc:id="f0c902c5-dbaf-4971-9e79-75ae47765d2b" name="acd-cds-Sub_Flow" />
+		<ee:transform doc:name="Final Response" doc:id="c8761a8d-314e-4075-8e30-68250095cb4a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="END - POST orders/payorders/{event_name} - Payorders123" doc:id="20d9b57c-dd9e-4d3a-82f8-eb4504074c30" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.end'), &quot;&quot;, &quot;END - POST orders/payorders/{event_name} - Payorders123&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.response}" />
+    </flow>
+    <flow name="post:\package_delivered\(event):application\json:sys-adobecampaign-api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="event">attributes.uriParams.'event'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  PKey: "@ZphkQqgwPhjyt5gzk43Pe8mzDmytvbVlbUuDib871BI0aU5D5Axa4_PJm0RWLQCd79E-f0Xfmg1F_RhvSGxGe5kM4x2cqultM6dlAy8wz6L5M-ilkdMwO4ynocIl2FLzlyVQmg",
+  application: "",
+  countryCode: "",
+  created: "",
+  ctx: {
+    ItemsCollection: [],
+    Name: "",
+    OrderId: "",
+    PackageNo: ""
+  },
+  email: "",
+  expiration: "",
+  externalId: "",
+  externalId2: "",
+  externalId3: "",
+  externalId4: "",
+  externalId5: "",
+  href: "https://mc.adobe.io/the1-mkt-stage1/campaign/mcthe1/EVTRE_CDS_Package_Delivered_EN/@ZphkQqgwPhjyt5gzk43Pe8mzDmytvbVlbUuDib871BI0aU5D5Axa4_PJm0RWLQCd79E-f0Xfmg1F_RhvSGxGe5kM4x2cqultM6dlAy8wz6L5M-ilkdMwO4ynocIl2FLzlyVQmg",
+  marketingCloudId: "",
+  mobilePhone: "",
+  postalAddress: {
+    addrDefined: false,
+    line1: "",
+    line2: "",
+    line3: "",
+    line4: "",
+    line5: "",
+    line6: "",
+    line7: "",
+    serialized: ""
+  },
+  processed: "",
+  pushPlatform: "apns",
+  registrationToken: "",
+  scheduled: "",
+  serverUrl: "https://the1-mkt-stage1-lb.campaign.adobe.com",
+  status: "pending",
+  title: ""
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+	<flow name="delete:\accounts\(event):application\json:sys-adobecampaign-api-config" doc:id="13451145-00cd-4255-bb46-1aa8a7d331a8" >
+		<logger level="INFO" doc:name="START - DELETE accounts/{event_name} - Delete Email Account" doc:id="453c4f30-6c70-4617-afff-f824b11392b4" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.entry'), &quot;&quot;, &quot;DELETE accounts/{event_name} - Delete Email Account&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.request}" />
+		<ee:transform doc:name="Set uri Params" doc:id="57eccb94-5e7e-4f37-9827-e069b059632a" >
+			<ee:variables >
+				<ee:set-variable variableName="event" ><![CDATA[attributes.uriParams.'event']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Generate Access Token" doc:id="4be85634-80af-4838-b0e2-cf4aeca73af3" name="Generate_Access_Token_SubFlow" />
+		<flow-ref doc:name="Invoke ACD Service" doc:id="0b63567c-85f8-4f75-a11e-4cd9ee5cec31" name="acd-cds-Sub_Flow" />
+		<ee:transform doc:name="Final Response" doc:id="5e0a84c3-cee5-4293-82fd-189d095f41e9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="END -DELETE accounts/{event_name} - Delete Email Account" doc:id="451908be-1536-4f45-b50a-f4c423560a3c" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(correlationId, flow.name, p('app.log.direction.end'), &quot;&quot;, &quot;END - DELETE accounts/{event_name} - Delete Email Account&quot;, &quot;&quot;, null, null, payload)]" category="${app.log.category.inbound.response}" />
+	</flow>
+</mule>

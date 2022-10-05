@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="acd-cds-Sub_Flow" doc:id="6705140e-8bb6-4cfa-b4a9-535f354943ea" >
+		<logger level="INFO" doc:name="START - Invoke Adobe Campaign Service" doc:id="0ba85bc9-6560-42bb-986e-2ee9e1b08a6c" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;START - Invoke Adobe Campaign Service for Event : &quot; ++ vars.event, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.response}" />
+		<http:request method="POST" doc:name="Call ACD Api" doc:id="0ce4232d-35ed-4161-925e-771e6a2cb082" config-ref="HTTP_Request_Config_centralgroup-acd" path="#[vars.event]">
+			<http:headers ><![CDATA[#[{
+	'x-api-key' : p('secure::https.acd.apikey'),
+	'Authorization' : 'Bearer ' ++ vars.token
+}]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="END - Invoke Adobe Campaign Service" doc:id="29e89afe-034a-439b-aa35-9deb7b09b0b3" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;END - Invoke Adobe Campaign Service for Event : &quot; ++ vars.event, &quot;&quot;, null, null, payload)]" category="${app.log.category.outbound.response}" />
+	</sub-flow>
+	<sub-flow name="acd-cds-loginservice-Sub_Flow" doc:id="e8ac9961-8d10-4817-aa94-67d828e55128" >
+		<logger level="INFO" doc:name="START - Invoke Adobe login Service" doc:id="cc7001ee-5c4a-4a19-b73a-63485c4a2b63" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;START - Invoke Adobe login Service&quot;, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.response}" />
+		<http:request method="POST" doc:name="Adobe Login Service" doc:id="b3bda00f-ffa9-481c-9aae-d1026105172b" config-ref="HTTP_Request_configuration_acd_login" path="${https.acd.login.path}">
+			<http:body ><![CDATA[#[%dw 2.0
+output multipart/form-data 
+---
+{
+    parts: {
+        client_id: {
+            headers : {
+                "Content-Type": "text/plain"
+            },
+            content:  Mule::p('secure::https.acd.login.client_id')
+        },
+        client_secret: {
+            headers : {
+                "Content-Type": "text/plain"
+            },
+            content: Mule::p('secure::https.acd.login.client_secret')
+        },
+        jwt_token: {
+            headers : {
+                "Content-Type": "text/plain"
+            },
+            content: vars.jwt_token
+        }
+    }
+}]]]></http:body>
+		</http:request>
+		<logger level="INFO" doc:name="END - Invoke Adobe login Service" doc:id="da23e2f1-f61a-42d5-b52f-8896dcf86312" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;END - Invoke Adobe login Service&quot;, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.response}" />
+	</sub-flow>
+</mule>

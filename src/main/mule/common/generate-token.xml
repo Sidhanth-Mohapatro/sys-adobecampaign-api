@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="Generate_Access_Token_SubFlow" doc:id="2856a079-3d70-41da-9ec8-5dde00626c85" >
+		<logger level="INFO" doc:name="START - Retrieve Access Token" doc:id="1c7ce657-99ae-47ef-ba47-89ac223a1c8d" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;START - Retrieve Access Token&quot;, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.request}" />
+		<os:retrieve doc:name="Retrieve Token" doc:id="4032f9ec-f45c-41ae-b914-135d7b405449" objectStore="Object_store" key="token" target="token">
+			<os:default-value ><![CDATA[#[""]]]></os:default-value>
+		</os:retrieve>
+		<choice doc:name="Check If Token Is Expired?" doc:id="d95548fd-68c5-4208-9b26-c8722589ea67" >
+			<when expression='#[vars.token != ""]'>
+				<set-variable value="#[vars.token]" doc:name="Set Token" doc:id="0da9fe3b-3361-4955-840c-630b46d682ca" variableName="token"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="Call Token Service" doc:id="810a5026-da11-44a8-8f5d-6d8ea8d0aa39" name="generate_jwt_token_Sub_Flow" target="token"/>
+				<os:store doc:name="Store Token" doc:id="d3514f6d-2c52-43dd-8fa5-b5eafd462c80" objectStore="Object_store" key="token">
+					<os:value ><![CDATA[#[vars.token.access_token]]]></os:value>
+				</os:store>
+				<set-variable value="#[vars.token.access_token]" doc:name="Set Token" doc:id="3fe62d2f-051a-42a8-8a4c-746c81d7902a" variableName="token"/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="END - Retrieve Access Token" doc:id="0361fe87-3424-4d91-9f74-d04433a4788e" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;END - Retrieved Access Token Successfully&quot;, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.response}" />
+	</sub-flow>
+	<sub-flow name="generate_jwt_token_Sub_Flow" doc:id="607777d7-e742-468d-a6ed-760d6f3d402c" >
+		<logger level="INFO" doc:name="START - Generate JWT Token" doc:id="d8e6c381-9375-4625-8e84-c98361b385d7" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;START - Generate JWT Token&quot;, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.response}" />
+		<ee:transform doc:name="Invoke Java" doc:id="67e84963-4947-40c8-a4ce-84b18f13936b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import java!com::central::IMSClient
+output application/json
+---
+{
+	client_id: "b8dad71d05354326b639681deaa66a1c",
+	client_secret: "2f1e563a-ad9c-4337-a21d-eb82b3d147b3",
+	jwt_token: IMSClient::getJWTToken(
+		"CC3A3CEE5CC2D8C10A495EE2@AdobeOrg", // orgId
+				"C52C33DB5FFA810A0A495C0F@techacct.adobe.com", // technicalAccountId
+				"b8dad71d05354326b639681deaa66a1c", // apiKey
+				"/adobe-pkcs8-private.key", // key_path
+				"ims-na1.adobelogin.com", //imsHost
+				"ent_campaign_sdk"  // metascopesString
+			
+	)
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<set-variable value="#[payload.jwt_token]" doc:name="Set Jwt Token" doc:id="721580b0-6213-469e-a2a6-e11c8221d33b" variableName="jwt_token" />
+		<logger level="INFO" doc:name="END - Generate JWT Token" doc:id="ee535094-3d89-404b-b310-0ef823113675" message="#[%dw 2.0&#10;output application/json&#10;import buildInfoLog from utility::loggingUtil&#10;---&#10;buildInfoLog(vars.transactionId, flow.name, p('app.log.direction.process'), &quot;&quot;, &quot;END - Generate JWT Token&quot;, &quot;&quot;, null, null, null)]" category="${app.log.category.outbound.response}" />
+		<flow-ref doc:name="Call Login Service" doc:id="4e6ed721-d247-4fcc-80da-efbfad49f53f" name="acd-cds-loginservice-Sub_Flow" />
+	</sub-flow>
+</mule>

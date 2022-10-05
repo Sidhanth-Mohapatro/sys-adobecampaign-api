@@ -1,0 +1,13 @@
+{
+  "x-event-code": "500",
+  "x-event-message": "An error has occurred, and the request couldn’t be completed",
+  "x-event-id": "5a01983b-2977-42d2-b21e-4189f640866c",
+  "timestamp": "2022-04-25 11:30:31",
+  "env": "dev",
+  "application": "api-name",
+  "error": {
+    "status-code": 500,
+    "type": "HTTP:INTERNAL_SERVER_ERROR",
+	  "description": "Error Description"
+  }
+}

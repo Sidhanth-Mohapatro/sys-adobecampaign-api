@@ -1,0 +1,46 @@
+#%RAML 1.0 Trait
+description: Contains common error responses
+
+uses: 
+  common-error-types: ../types/lib-common-response-types.raml
+
+responses:
+  400:
+    description: |
+      Request has malformed, missing or non-compliant URL parameters.
+    body:
+      application/json:
+        type: common-error-types.base-error-response
+        example: !include ../examples/common-response-400.json
+    headers:
+      !include trait-common-response-headers.yaml
+
+  401:
+    description: 
+      Authorization header missing or invalid token.
+    body:
+      application/json:
+        type: common-error-types.base-error-response
+        example: !include ../examples/common-response-401.json
+    headers:
+      !include trait-common-response-headers.yaml
+
+  404:
+    description: |
+      The requested resource could not be found but may be available in the future.
+    body:
+      application/json:
+        type: common-error-types.base-error-response
+        example: !include ../examples/common-response-404.json
+    headers:
+      !include trait-common-response-headers.yaml
+
+  500:
+    description: |
+      Something went wrong at the API Gateway or application level.
+    body:
+      application/json:
+        type: common-error-types.base-error-response
+        example: !include ../examples/common-response-500.json
+    headers:
+      !include trait-common-response-headers.yaml

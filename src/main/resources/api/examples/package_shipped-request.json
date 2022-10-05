@@ -1,0 +1,24 @@
+{
+    "email": "email@example.com",
+    "ctx": {
+        "TrackingUrl": "https://th.kerryexpress.com/th/track/?track=KNJ0300858552",
+        "CustomerAddress": "Khun ชนิดา ฆังคะจิตร\nอ.เฉลิมพระเกียรติ์ 60 ปี ชั้น 3, 22/2 ม. 1 ซ.บ้านตก, N/A, Nam Noi, Hat Yai, Songkhla, Songkhla, 90110",
+        "Lastname": "",
+        "PackageNo": "string127",
+        "OrderId": "CO2207230598811",
+        "Name": "ชนิดา",
+        "OrderPackageNo": "1",
+        "Package": "",
+        "TrackingNo": "KNJ0300858552",
+        "ItemsCollection": [
+            {
+                "ProductUrl": "https://central.co.th/en/nike-white-nike-jordan-jumpman-men-s-t-shirt-mkp1155332",
+                "Image": "https://backend.central.co.th/pub/media//catalog/product//a/4/a448005ba9920efd6289ac66ecbbd3707b901846_mkp1155332dummy.jpg",
+                "Name": "WHITE NIKE Jordan Jumpman Men's T-Shirt",
+                "Sku": "MKP1155332",
+                "Qty": 1,
+                "Price": "720.00"
+            }
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "email": "email@example.com",
+    "ctx": {
+        "OrderPickupCode": "374808",
+        "PickupLocationName": "Central Lardprao 2 FL",
+        "OrderCustomerName": "Frances Pang",
+        "OrderIncrementId": "CO2209010019420"
+    }
+}

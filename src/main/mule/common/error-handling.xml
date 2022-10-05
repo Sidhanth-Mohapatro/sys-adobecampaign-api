@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+	<error-handler name="sys-adobecampaign-api-APIKIT_Error_Handler" doc:id="007df702-653e-4600-9a02-e1d352529bd0" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8447404c-26e2-475a-b0ee-caf08b680367" type="HTTP:BAD_REQUEST">
+			<logger level="INFO" doc:name="START - Transform system error response" doc:id="b7ea7394-025d-49c2-bfcb-4022e9a7ccbc" message="START - Transform system error response" />
+			<ee:transform doc:name="Backend System Bad Request" doc:id="8fc7b045-2653-44ef-ac68-44bd99d62f00">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.system.authentication.code'),
+	"x-event-message": p('x-event.failure.system.authentication.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="END - Transform system error response" doc:id="5d8e2d39-e29f-45ae-b513-604a3c6e7ee9" message="END - Transform system error response" />
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3ca2f116-1ce1-468f-b77f-64bd1fddb4ca" type="HTTP:UNAUTHORIZED, HTTP:BASIC_AUTHENTICATION, HTTP:SECURITY, HTTP:FORBIDDEN">
+			<logger level="INFO" doc:name="START - Transform system error response" doc:id="f433cf82-066b-48cc-88f6-b0c1cd873a54" message="START - Transform system error response" />
+			<ee:transform doc:name="Backend System Authentication Error" doc:id="59992256-9828-4663-8166-615a38617598">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.system.authentication.code'),
+	"x-event-message": p('x-event.failure.system.authentication.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="END - Transform system error response" doc:id="f3f44cfb-8905-40fd-92f4-49a15f7181ce" message="END - Transform system error response" />
+		</on-error-propagate>
+		<on-error-propagate type="APIKIT:BAD_REQUEST">
+                <logger level="INFO" doc:name="START - Transform APIKit error response" doc:id="d64937b4-1783-42c3-b173-bda8d8226a53" message="START - Transform APIKit error response"/>
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="75c77c7e-88ab-4904-a5e1-bc4177336760" doc:name="APIKIT Bad Request">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.apikit.error.code'),
+	"x-event-message": p('x-event.failure.apikit.error.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="END - Transform APIKit error response" doc:id="a24edd10-7fc1-4f23-8c1a-f1854980386f" message="END - Transform APIKit error response" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <logger level="INFO" doc:name="START - Transform APIKit error response" doc:id="af5d8fe7-8dac-440a-ace5-b1a74e5d78b8" message="START - Transform APIKit error response"/>
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="da054158-1525-46d8-96c2-4d07d8a89351" doc:name="APIKIT Resource Not Found">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.apikit.error.code'),
+	"x-event-message": p('x-event.failure.apikit.error.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="END - Transform APIKit error response" doc:id="a123a8b4-4af3-4c7d-87b8-9b6ed388fe4f" message="END - Transform APIKit error response" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <logger level="INFO" doc:name="START - Transform APIKit error response" doc:id="b5280743-896d-46d9-974f-c27a9808f1e7" message="START - Transform APIKit error response"/>
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="6e6777c6-8c55-422c-8b24-23fc141d1951" doc:name="APIKIT Method Not Allowed">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.apikit.error.code'),
+	"x-event-message": p('x-event.failure.apikit.error.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="END - Transform APIKit error response" doc:id="d47e3865-9ca8-43cd-b156-8c8a5879f988" message="END - Transform APIKit error response" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <logger level="INFO" doc:name="START - Transform APIKit error response" doc:id="69963381-bf69-420e-97fd-6d641e8afa2a" message="START - Transform APIKit error response"/>
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="6f1deb8d-5d20-4f38-a09b-046f8d56d9a3" doc:name="APIKIT Not Acceptable">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.apikit.error.code'),
+	"x-event-message": p('x-event.failure.apikit.error.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="END - Transform APIKit error response" doc:id="acc81596-36b3-4aca-8f57-eeab566e461f" message="END - Transform APIKit error response" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <logger level="INFO" doc:name="START - Transform APIKit error response" doc:id="3b765e8f-4b0b-4e54-848f-07c54330d3d9" message="START - Transform APIKit error response"/>
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="f9737d1b-f82c-4405-afd2-fc4ef269443a" doc:name="APIKIT Unsupported Media Type">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.apikit.error.code'),
+	"x-event-message": p('x-event.failure.apikit.error.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="END - Transform APIKit error response" doc:id="08043158-2ad3-4a80-a761-0cebbc046de3" message="END - Transform APIKit error response" />
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <logger level="INFO" doc:name="START - Transform APIKit error response" doc:id="4791a788-ce28-4062-9dd4-cfb0df1716fa" message="START - Transform APIKit error response"/>
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="cfe29719-6f48-4e5e-9e08-51d6bd5b1de9" doc:name="APIKIT Not Implemented">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.apikit.error.code'),
+	"x-event-message": p('x-event.failure.apikit.error.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="INFO" doc:name="END - Transform APIKit error response" doc:id="45335f3c-d824-432b-9786-2a7a2156aa32" message="END - Transform APIKit error response" />
+            </on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="7c88573a-3b93-4baa-98c6-01f988e9261d" type="HTTP:CONNECTIVITY">
+			<logger level="INFO" doc:name="START - Transform system error response" doc:id="73383bfd-7ac1-4ccb-b522-fe74e1145b24" message="START - Transform system error response" />
+			<ee:transform doc:name="Backend System Connection Error" doc:id="0acd5fc1-bbcf-437e-aa48-417664250aab">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"x-event-code": p('x-event.failure.system.connection.code'),
+	"x-event-message": p('x-event.failure.system.connection.message'),
+	"error": {
+		"type": error.errorType.namespace ++ ":" ++ error.errorType.identifier,
+		"description": error.description
+	}
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="END - Transform system error response" doc:id="ba10ae9e-71e6-46c1-b51a-a14de3bec3f4" message="END - Transform system error response" />
+		</on-error-propagate>
+	</error-handler>
+</mule>

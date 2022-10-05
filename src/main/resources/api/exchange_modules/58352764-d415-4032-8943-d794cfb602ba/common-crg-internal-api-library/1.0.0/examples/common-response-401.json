@@ -1,0 +1,13 @@
+{
+  "x-event-code": "401",
+  "x-event-message": "Unauthorised User",
+  "x-event-id": "5a01983b-2977-42d2-b21e-4189f640866c",
+  "timestamp": "2022-04-25 11:30:31",
+  "env": "dev",
+  "application": "api-name",
+  "error": {
+    "status-code": 401,
+    "type": "HTTP:AUTHORIZATION",
+	  "description": "Error Description"
+  }
+}

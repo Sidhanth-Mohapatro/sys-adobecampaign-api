@@ -1,0 +1,32 @@
+{
+    "email": "email@example.com",
+    "ctx": {
+        "TrackingLink": "https://th.kerryexpress.com/th/track/?track=KNJ0300858373",
+        "TrackingId": "KNJ0300858373",
+        "ShippingAddress": "Khun Pakorn Sattayamapakorn\n8/20 ศรีนครินทร์ 49, Nong Bon, Prawet, Bangkok, Bangkok, 10250",
+        "OrderEmailCustomerNote": "",
+        "OrderCreatedAt": "",
+        "OrderCustomerName": "Pakorn",
+        "OrderIncrementId": "CO2207050117616",
+        "GrandTotal": "",
+        "DiscountAmount": "",
+        "CouponCode": "",
+        "ShippingAmount": "",
+        "Subtotal": "",
+        "OrderItems": [
+            {
+                "ItemThumbnail": "https://backend.central.co.th/pub/media//catalog/product//7/5/754ddd759fd696de046a6b020068ae9723ae342b_mkp0659077dummy.jpg",
+                "ItemUrl": "https://central.co.th/en/s-sports-black-s-sports-men-s-fitness-gloves-mkp0659077",
+                "Name": "Black S SPORTS Men's Fitness Gloves",
+                "Sku": "MKP0659077",
+                "Description": "",
+                "QtyOrdered": 1,
+                "RowTotal": "531.00",
+                "ParentItemId": "",
+                "GiftMessageSender": "",
+                "GiftMessageRecipient": "",
+                "GiftMessageMessage": ""
+            }
+        ]
+    }
+}

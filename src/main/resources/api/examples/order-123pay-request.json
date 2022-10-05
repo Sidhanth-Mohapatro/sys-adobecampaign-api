@@ -1,0 +1,32 @@
+{
+    "email": "email@example.com",
+    "ctx": {
+        "GrandTotal": "790.00",
+        "DiscountAmount": "",
+        "ShippingAmount": "0.00",
+        "Subtotal": "790.00",
+        "ShippingDescription": "Central - Standard Delivery",
+        "PaymentHtml": "<dl class=\"payment-method\" style=\"margin-top: 0; margin-bottom: 10px;\">\n<dt class=\"title\" style=\"margin-bottom: 5px; margin-top: 0; font-weight: 400;\">Bank Transfer / Counter Services</dt>\n</dl>",
+        "ShippingAddress": "Ricardo Van Hoepen\naddress: HOLM 600/15 หมู่ 5 ถนน สมโภช 700 ปี\nzipCode: 50300\nSan Phisuea\nMueang Chiang Mai\nChiang Mai, Chiang Mai, 50300\nThailand\nT: 0954495910",
+        "BillingAddress": "",
+        "OrderEmailCustomerNote": "",
+        "OrderCreatedAt": "Sep 4, 2022, 12:51:50 AM",
+        "OrderCustomerName": "Ricardo Van Hoepen",
+        "OrderIncrementId": "CO2209040094254",
+        "OrderItemsCollection": [
+            {
+                "ItemThumbnail": "https://backend.central.co.th/pub/media//catalog/product//8/f/8f92530f5806ffab7ecf74d5e6161d933a8d7435_mkp0595380dummy.jpg",
+                "ItemUrl": "https://central.co.th/en/by-scanproducts-camile-tea-pot-500ml-mkp0595380",
+                "Name": "Camile Tea pot 500ml",
+                "Sku": "MKP0595380",
+                "Description": "",
+                "QtyOrdered": 1,
+                "RowTotal": "790.00",
+                "ParentItemId": "",
+                "GiftMessageSender": "",
+                "GiftMessageRecipient": "",
+                "GiftMessageMessage": ""
+            }
+        ]
+    }
+}

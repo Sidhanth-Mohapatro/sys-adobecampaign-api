@@ -1,0 +1,8 @@
+Content-Type:
+  description: "Media type of the response"
+  type: string
+  required: true
+X-Event-ID:
+  description: "Contains the unique identifier from the downstream system.   This may not always be the same as the request or transaction X-Correlation-ID from the request header.  There are some downstream systems that doesn't respect the forwarded correlation id and returns a different one.  To capture this, it will be returned as this response header, to be propagated across to upstream layer.  In case not applicable, this would have to be defaulted to X-Correlation-ID value."
+  required: true
+  type: string

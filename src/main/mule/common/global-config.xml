@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="a60727c5-e462-4b27-b6c8-a7456f48e565" file="config/${env}/config.properties" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="cdc5ef26-8faa-4770-939d-9138d973b706" file="config/${env}/secure-config.properties" key="${secure.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<import doc:name="Import" doc:id="903a63a3-908b-488b-96f8-b893e518082d" file="crg-internal-global-error-handler.xml" />
+	<import doc:name="Import" doc:id="6f71a0b9-e9f5-45f8-8d06-348372bd59aa" file="crg-internal-apikit-error-handler.xml" />
+	<http:request-config name="HTTP_Request_Config_centralgroup-acd" doc:name="HTTP Request configuration" doc:id="5347c7cd-ca82-4ee5-91b5-58cb8db04bf3" basePath="${https.acd.basepath}" responseTimeout="${http.acd.response.timeout}">
+		<http:request-connection host="${https.acd.host}" protocol="${https.acd.protocol}" port="${https.acd.port}" connectionIdleTimeout="${http.acd.idle.timeout}" maxConnections="${http.acd.max.connections}">
+			<reconnection failsDeployment="true" >
+				<reconnect frequency="${http.acd.reconnection.frequency}" count="${http.acd.reconnection.attempt}" />
+			</reconnection>
+		</http:request-connection>
+		<http:default-headers >
+		</http:default-headers>
+	</http:request-config>
+	<http:request-config name="HTTP_Request_configuration_acd_login" doc:name="HTTP Request configuration" doc:id="b5c43ab4-a40a-4ee2-97c3-0ed9d8e7d8a9" responseTimeout="${http.acd.response.timeout}">
+		<http:request-connection protocol="HTTPS" host="${https.acd.login.host}" maxConnections="${http.acd.idle.timeout}" connectionIdleTimeout="${http.acd.idle.timeout}">
+			<reconnection >
+				<reconnect frequency="${http.acd.reconnection.frequency}" count="${http.acd.reconnection.attempt}"/>
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="c03119f2-9de4-47d1-bef4-392b299f556c" maxEntries="${oauth.maxentries}" entryTtl="${oauth.ttl}" expirationInterval="${oauth.expirationinterval}" expirationIntervalUnit="HOURS" persistent="false"/>
+	<configuration-properties doc:name="Configuration properties" doc:id="916f9846-f33b-4ae3-9ce9-d1c6bcf9c986" file="config\common\common.properties" />
+	<configuration doc:name="Configuration" doc:id="c415a1d5-db83-4aed-89bc-0462114256a2" defaultErrorHandler-ref="sys-adobecampaign-api-APIKIT_Error_Handler" />
+	<api-gateway:autodiscovery apiId="${app.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="3fe78e93-177d-4acc-b464-cfe82ac0b328" flowRef="sys-adobecampaign-api-main" />
+</mule>

@@ -1,0 +1,7 @@
+{
+    "email": "myprofile@adobe.com",
+    "ctx": {
+        "customer_email": "string255",
+        "customer_name": "string255"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "email": "supachai@central.tech",
+    "ctx": {
+        "ShippingDescription": "string127",
+        "PaymentHtml": "string127",
+        "ShippingAddress": "string127",
+        "BillingAddress": "string127",
+        "OrderEmailCustomerNote": "string127",
+        "OrderCreatedAt": "string127",
+        "OrderCustomerName": "string127",
+        "OrderIncrementId": "string127",
+        "Subtotal": "string127",
+        "ShippingAmount": "string127",
+        "GrandTotal": "string127",
+        "DiscountAmount": "string127",
+        "CouponCode": "string127",
+        "OrderItems": [
+            {
+                "ItemThumbnail": "string127 #1",
+                "ItemUrl": "string127 #1",
+                "Name": "string127 #1",
+                "Sku": "string127 #1",
+                "Description": "string0 #1",
+                "QtyOrdered": "string127 #1",
+                "RowTotal": "string127 #1",
+                "ParentItemId": "string127 #1",
+                "GiftMessageSender": "string127 #1",
+                "GiftMessageRecipient": "string127 #1",
+                "GiftMessageMessage": "string250 #1"
+            },
+            {
+                "ItemThumbnail": "string127 #2",
+                "ItemUrl": "string127 #2",
+                "Name": "string127 #2",
+                "Sku": "string127 #2",
+                "Description": "string0 #2",
+                "QtyOrdered": "string127 #2",
+                "RowTotal": "string127 #2",
+                "ParentItemId": "string127 #2",
+                "GiftMessageSender": "string127 #2",
+                "GiftMessageRecipient": "string127 #2",
+                "GiftMessageMessage": "string250 #2"
+            }
+        ]
+    }
+}

@@ -1,0 +1,195 @@
+#%RAML 1.0
+title: sys-adobecampaign-api
+version: 1.0
+description: System API for AdobeCampaign
+protocols: [HTTPS]
+
+traits:
+  common-headers: !include /exchange_modules/58352764-d415-4032-8943-d794cfb602ba/common-crg-internal-api-library/1.0.0/traits/trait-common-request-headers.raml
+  common-errors: !include /exchange_modules/58352764-d415-4032-8943-d794cfb602ba/common-crg-internal-api-library/1.0.0/traits/trait-common-response-errors.raml
+
+
+uses:
+  common-response-lib: /exchange_modules/58352764-d415-4032-8943-d794cfb602ba/common-crg-internal-api-library/1.0.0/types/lib-common-response-types.raml
+
+types:
+  base-response: common-response-lib.base-response
+
+/accounts:
+  /{event}:
+    is: [common-headers, common-errors]
+    post:
+     description: This endpoint allows you to cancel order
+     body:
+      application/json:
+        example: !include /examples/account-creation-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/account-creation-response.json
+    delete:
+     description: This endpoint allows you to cancel order
+     body:
+      application/json:
+        example: !include /examples/delete-emailaccount-request.json
+     responses: 
+        200:
+          body:
+            application/json:
+              example: !include /examples/delete-emailaccount-response.json
+
+/passwords:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to cancel order
+     body:
+      application/json:
+        example: !include /examples/password-creation-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/password-creation-response.json   
+
+/orders:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to Create New order
+     body:
+      application/json:
+        example: !include /examples/order-creation-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/order-creation-response.json
+  /payorders:
+    /{event}:
+      is: [common-headers, common-errors]  
+      post:
+        description: This endpoint allows you to Create New order Pay
+        body:
+          application/json:
+            example: !include /examples/order-123pay-request.json
+        responses:
+          201:
+            body:
+              application/json:
+                  example: !include /examples/order-123pay-response.json
+                   
+  /3hrsdelivery:
+    /{event}:
+      is: [common-headers, common-errors]  
+      post:
+        description: This endpoint allows you to Create New order Pay
+        body:
+          application/json:
+            example: !include /examples/order-3hrsdelivery-request.json
+        responses:
+          201:
+            body:
+              application/json:
+                example: !include /examples/order-3hrsdelivery-response.json  
+                 
+            
+
+/shipping:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to review vouchers
+     body:
+      application/json:
+        example: !include /examples/shipping-status-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/shipping-status-response.json
+
+/clickandcollect:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to click and collect items
+     body:
+      application/json:
+        example: !include /examples/click_collect-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/click_collect-response.json
+
+/subscription:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to subscribe
+     body:
+      application/json:
+        example: !include /examples/subscription-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/subscription-response.json
+
+/package_shipped:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to send package shipped status
+     body:
+      application/json:
+        example: !include /examples/package_shipped-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/package_shipped-response.json
+
+/package_delivered:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to send package shipped status
+     body:
+      application/json:
+        example: !include /examples/package_delivered-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/package_delivered-response.json
+
+/vouchers:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to send package shipped status
+     body:
+      application/json:
+        example: !include /examples/review-voucher-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/review-voucher-response.json   
+
+/reminders:
+  /{event}:
+    is: [common-headers, common-errors]    
+    post:
+     description: This endpoint allows you to send package shipped status
+     body:
+      application/json:
+        example: !include /examples/reminder_2hrs_pickup-request.json
+     responses: 
+        201:
+          body:
+            application/json:
+              example: !include /examples/reminder_2hrs_pickup-response.json  
